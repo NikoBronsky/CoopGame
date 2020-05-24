@@ -74,7 +74,7 @@ void ASWeapon::Fire()
 }
 
 
-void ASWeapon::PlayFireEffects(FVector TraceEnd)
+void ASWeapon::PlayFireEffects(FVector TracerEndPoint)
 {
 
 	if (MuzzleEffect)
@@ -89,7 +89,7 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 		UParticleSystemComponent* TracerComp = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
 		if (TracerComp)
 		{
-			TracerComp->SetVectorParameter("Target", TraceEnd);
+			TracerComp->SetVectorParameter("Target", TracerEndPoint);
 		}		
 	}
 }

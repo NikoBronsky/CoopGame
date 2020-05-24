@@ -8,7 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
-class ASWeapon;
+//class ASWeapon;
 
 UCLASS()
 class COOPGAME_API ASCharacter : public ACharacter
