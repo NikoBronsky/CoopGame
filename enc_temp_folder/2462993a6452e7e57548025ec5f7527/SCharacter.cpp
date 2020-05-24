@@ -21,7 +21,6 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	ZoomFOV = 65.0f;
-	ZoomInterpSpeed = 20;
 }
 // Called when the game starts or when spawned
 void ASCharacter::BeginPlay()
@@ -52,14 +51,20 @@ void ASCharacter::EndCrouch()
 }
 
 
-void ASCharacter::BeginZoom()
-{
-	bWantsToZoom = true;
-}
-
+// void ASCharacter::BeginZoom()
+// {
+// 	bWantsToZoom = true;
+// }
+// 
 void ASCharacter::EndZoom()
 {
-	bWantsToZoom = false;
+	//bWantsToZoom = false;
+}
+
+void ASCharacter::BeginZoom()
+{
+	bWantsToZoom = !bWantsToZoom;
+	
 }
 
 // Called every frame
@@ -67,10 +72,9 @@ void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	float TargetFOV = bWantsToZoom ? ZoomFOV : DefaultFOV;
-	float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
+	float CurrentFOV = bWantsToZoom ? ZoomFOV : DefaultFOV;
 
-	CameraComp->SetFieldOfView(NewFOV);
+	CameraComp->SetFieldOfView(CurrentFOV);
 
 
 }
