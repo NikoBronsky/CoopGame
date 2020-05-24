@@ -74,7 +74,7 @@ void ASWeapon::Fire()
 }
 
 
-void ASWeapon::PlayFireEffects(FVector TracerEndPoint)
+void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
 
 	if (MuzzleEffect)
@@ -89,7 +89,18 @@ void ASWeapon::PlayFireEffects(FVector TracerEndPoint)
 		UParticleSystemComponent* TracerComp = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
 		if (TracerComp)
 		{
-			TracerComp->SetVectorParameter("Target", TracerEndPoint);
+			TracerComp->SetVectorParameter("Target", TraceEnd);
 		}		
 	}
+
+	AActor* MyOwner = Cast<APawn>(GetOwner());
+	if (MyOwner)
+	{
+		APlayerController* PC = Cast<APlayerController>(MyOwner->GetInstigatorController());
+		if (PC)
+		{
+			PC->ClientPlayCameraShake();
+		}
+	}
+
 }
