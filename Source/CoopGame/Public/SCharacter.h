@@ -41,7 +41,7 @@ protected:
 	void StopFire();
 
 	UFUNCTION()
-	void OnHealthChanged(USHealthComponent* DHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	// Pawn died previously
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
@@ -53,7 +53,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
 
-//*	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
 	USHealthComponent* HealthComp;
 
 	bool bWantsToZoom;
