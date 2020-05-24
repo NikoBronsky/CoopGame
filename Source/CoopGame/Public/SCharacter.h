@@ -35,7 +35,9 @@ protected:
 
 	void EndZoom();
 
-	void Fire();
+	void StartFire();
+
+	void StopFire();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category = "Components")
 	UCameraComponent* CameraComp;
