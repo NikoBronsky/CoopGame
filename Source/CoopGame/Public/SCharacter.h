@@ -67,6 +67,7 @@ protected:
 	/* Default FOV set during begin play */
 	float DefaultFOV;
 
+	UPROPERTY(Replicated)
 	ASWeapon* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
