@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Engine.h"
 #include "SCharacter.generated.h"
 
 class UCameraComponent;
@@ -67,6 +68,7 @@ protected:
 	/* Default FOV set during begin play */
 	float DefaultFOV;
 
+	UPROPERTY(Replicated)
 	ASWeapon* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
@@ -84,4 +86,5 @@ public:
 
 	virtual FVector GetPawnViewLocation() const override;
 
+	//virtual void::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
