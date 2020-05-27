@@ -7,7 +7,6 @@
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 #include "GameFrameWork/Character.h"
-#include "DrawDebugHelpers.h"
 
 
 // Sets default values
@@ -64,8 +63,6 @@ void ASTrackerBot::Tick(float DeltaTime)
 	if (DistanceToTarget <= RequiredDistanceToTarget)
 	{
 		NextPathPoint = GetNextPathPoint();
-
-		DrawDebugString(GetWorld(), GetActorLocation(), "Target Reached!");
 	}
 	else
 	{
@@ -76,10 +73,7 @@ void ASTrackerBot::Tick(float DeltaTime)
 		ForceDirection *= MovememntForce;
 
 		MeshComp->AddForce(ForceDirection, NAME_None, bUseVelocityChange);
-
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + ForceDirection, 32, FColor::Yellow, false, 0.0f, 1.0f);
 	}
 
-	DrawDebugSphere(GetWorld(), NextPathPoint, 20, 12, FColor::Yellow, false, 0.0f, 1.0f);
 }
 
