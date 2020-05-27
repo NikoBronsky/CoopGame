@@ -5,6 +5,7 @@
 #include "Components/SHealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "Net/UnrealNetwork.h"
 
 
 
@@ -28,6 +29,9 @@ AExplosiveActor::AExplosiveActor()
 	RadialForceComp->bIgnoreOwningActor = true;
 
 	ExplosionImpulse = 400;
+
+	SetReplicates(true);
+	SetReplicateMovement(true);
 }
 
 void AExplosiveActor::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
@@ -42,15 +46,11 @@ void AExplosiveActor::OnHealthChanged(USHealthComponent* OwningHealthComp, float
 	{
 		// Explode
 		bExploded = true;
+		OnRep_Exploded();
 
 		// boost the barrel upwards
 		FVector BoostIntensity = FVector::UpVector * ExplosionImpulse;
 		MeshComp->AddImpulse(BoostIntensity, NAME_None, true);
-
-		// Play FX and change self material to black
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
-		// Override material on mesh with blackened version
-		MeshComp->SetMaterial(0, ExplodedMaterial);
 
 		// Blast away nearby physics actors
 		RadialForceComp->FireImpulse();
@@ -59,4 +59,18 @@ void AExplosiveActor::OnHealthChanged(USHealthComponent* OwningHealthComp, float
 	}
 }
 
+void AExplosiveActor::OnRep_Exploded()
+{
+	// Play FX and change self material to black
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+	// Override material on mesh with blackened version
+	MeshComp->SetMaterial(0, ExplodedMaterial);
 
+}
+
+void AExplosiveActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AExplosiveActor,bExploded);
+}
