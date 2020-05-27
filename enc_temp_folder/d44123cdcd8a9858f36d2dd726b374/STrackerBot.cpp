@@ -29,6 +29,9 @@ ASTrackerBot::ASTrackerBot()
 	MovememntForce = 1000;
 	RequiredDistanceToTarget = 100;
 
+	ExplosionDamage = 40;
+	ExplosionRadius = 200;
+
 }
 
 // Called when the game starts or when spawned
@@ -42,11 +45,25 @@ void ASTrackerBot::BeginPlay()
 
 void ASTrackerBot::HandleTakeDamage(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	//Expolode! on hitpoints == 0
+	if (MatInst == nullptr)
+	{
+		MatInst = MeshComp->CreateAndSetMaterialInstanceDynamicFromMaterial(0, MeshComp->GetMaterial(0));
 
-	// @TODO: Pulse the material on hit
+	}
+
+	if (MatInst)
+	{
+		MatInst->SetScalarParameterValue("LastTimeDamageTaken", GetWorld()->TimeSeconds);
+	}
+
 
 	UE_LOG(LogTemp, Log, TEXT("Health %s of %s"), *FString::SanitizeFloat(Health), *GetName());
+
+	//Expolode! on hitpoints == 0
+	if (Health <= 0.0f)
+	{
+		SelfDestruct();
+	}
 }
 
 FVector ASTrackerBot::GetNextPathPoint()
@@ -55,16 +72,42 @@ FVector ASTrackerBot::GetNextPathPoint()
 	ACharacter* PlayerPawn = UGameplayStatics::GetPlayerCharacter(this, 0);
 
 	UNavigationPath* NavPath = UNavigationSystemV1::FindPathToActorSynchronously(this, GetActorLocation(), PlayerPawn);
-
-	if (NavPath->PathPoints.Num() > 1)
+	if (NavPath)
 	{
-		// Return next point in the path
-		return NavPath->PathPoints[1];
+		if (NavPath->PathPoints.Num() > 1)
+		{
+			// Return next point in the path
+			return NavPath->PathPoints[1];
+		}
 	}
+
 
 	// Failed to find path
 	return GetActorLocation();
 
+}
+
+void ASTrackerBot::SelfDestruct()
+{
+	if (bExploded)
+	{
+		return;
+	}
+
+	bExploded = true;
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+
+	TArray<AActor*> IgnoredActros;
+	IgnoredActros.Add(this);
+	
+	// Apply Damage
+	UGameplayStatics::ApplyRadialDamage(this, ExplosionDamage, GetActorLocation(), ExplosionRadius, nullptr, IgnoredActros, this, GetInstigatorController(), true);
+
+	DrawDebugSphere(GetWorld(), GetActorLocation(), ExplosionRadius, 12, FColor::Red, false, 2.0f, 0, 1.0f);
+
+	// Delete Actor immediately
+	Destroy();
 }
 
 // Called every frame
