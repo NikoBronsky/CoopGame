@@ -4,6 +4,8 @@
 #include "SPickupActor.h"
 #include "Components/SphereComponent.h"
 #include "Components/DecalComponent.h"
+#include "SPowerupActor.h"
+#include "TimerManager.h"
 
 // Sets default values
 ASPickupActor::ASPickupActor()
@@ -17,19 +19,43 @@ ASPickupActor::ASPickupActor()
 	DecalComp->SetRelativeRotation(FRotator (90,0.0f,0.0f));
 	DecalComp->DecalSize = FVector(64, 75, 75);
 	DecalComp->SetupAttachment(RootComponent);
+
+
 }
 
 // Called when the game starts or when spawned
 void ASPickupActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Respawn();
 	
+}
+
+void ASPickupActor::Respawn()
+{
+	if (PowerupClass == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Powerup class is nullptr in %s. Please update your Blueprint"), *GetName());
+		return;
+	}
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	PowerUpInstance = GetWorld()->SpawnActor<ASPowerupActor>(PowerupClass, GetTransform(), SpawnParams);
 }
 
 void ASPickupActor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	// @TODO: Grant a powerup to player if available
+	if (PowerUpInstance)
+	{
+		PowerUpInstance->ActivatePowerup();
+		PowerUpInstance = nullptr;
+
+		// Set timer to respawn
+		GetWorldTimerManager().SetTimer(TimerHandle_RespawnTimer, this, &ASPickupActor::Respawn, CooldownDuration);
+	}
 }
 
