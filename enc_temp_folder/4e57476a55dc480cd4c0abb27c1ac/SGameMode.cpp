@@ -69,36 +69,6 @@ void ASGameMode::CheckWaveState()
 	
 }
 
-void ASGameMode::CheckAnyPlayerAlive()
-{
-	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-	{
-		APlayerController* PC = It->Get();
-		if (PC && PC->GetPawn())
-		{
-			APawn* MyPawn = PC->GetPawn();
-			USHealthComponent* HealthComp = Cast<USHealthComponent>(MyPawn->FindComponentByClass(USHealthComponent::StaticClass()));
-			if (ensure (HealthComp && HealthComp->GetHealth() > 0.0f))
-			{
-				// A player still alive
-				return;
-			}
-		}
-	}
-
-	// No Player alive
-	GameOver();	
-}
-
-void ASGameMode::GameOver()
-{
-	EndWave();
-
-	// @TODO: Finish up the match, present "Game over" to players
-
-	UE_LOG(LogTemp, Log, TEXT("Game Over! Players died!"));
-}
-
 void ASGameMode::StartPlay()
 {
 	Super::StartPlay();
@@ -111,7 +81,6 @@ void ASGameMode::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	CheckWaveState();
-	CheckAnyPlayerAlive();
 }
 
 void ASGameMode::SpawnBotTimerElapsed()

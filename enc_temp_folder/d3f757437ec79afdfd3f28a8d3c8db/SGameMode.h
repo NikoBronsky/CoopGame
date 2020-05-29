@@ -47,10 +47,6 @@ protected:
 
 	void CheckWaveState();
 
-	void CheckAnyPlayerAlive();
-
-	void GameOver();
-
 public:
 
 	ASGameMode();
@@ -58,5 +54,4 @@ public:
 	virtual void StartPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
-
 };
