@@ -4,6 +4,7 @@
 #include "SGameMode.h"
 #include "TimerManager.h"
 #include "Components/SHealthComponent.h"
+#include "SGameState.h"
 #include "EngineUtils.h"
 
 ASGameMode::ASGameMode()
@@ -12,6 +13,8 @@ ASGameMode::ASGameMode()
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickInterval = 1.0f;
+
+	GameStateClass = ASGameState::StaticClass();
 }
 
 
@@ -97,6 +100,16 @@ void ASGameMode::GameOver()
 	// @TODO: Finish up the match, present "Game over" to players
 
 	UE_LOG(LogTemp, Log, TEXT("Game Over! Players died!"));
+}
+
+void ASGameMode::SetWaveState(EWaveState NewState)
+{
+	ASGameState* GS = GetGameState<ASGameState>();
+
+	if (ensureAlways (GS))
+	{
+		GS->WaveState = NewState;
+	}
 }
 
 void ASGameMode::StartPlay()
