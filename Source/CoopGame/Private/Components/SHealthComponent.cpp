@@ -52,6 +52,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 }
 
+
 void USHealthComponent::Heal(float HealAmount)
 {
 	if (HealAmount <= 0.0f|| Health <= 0.0f)
@@ -66,6 +67,12 @@ void USHealthComponent::Heal(float HealAmount)
 	OnHealthChanged.Broadcast(this, Health, -HealAmount, nullptr, nullptr, nullptr);
 
 }
+
+float USHealthComponent::GetHealth() const
+{
+	return Health;
+}
+
 
 void USHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
