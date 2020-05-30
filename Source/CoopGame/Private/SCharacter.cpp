@@ -122,6 +122,12 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 
 		SetLifeSpan(10.0f);
 
+		if (CurrentWeapon)
+		{
+			CurrentWeapon->StopFire();
+			CurrentWeapon->SetLifeSpan(10.0f);
+		}
+
 
 	}
 }
