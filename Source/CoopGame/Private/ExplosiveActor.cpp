@@ -56,6 +56,14 @@ void AExplosiveActor::OnHealthChanged(USHealthComponent* OwningHealthComp, float
 		RadialForceComp->FireImpulse();
 
 		// @TODO: Apply radial damage
+		TArray<AActor*> IgnoredActros;
+		IgnoredActros.Add(this);
+
+		UGameplayStatics::ApplyRadialDamage(this, 120 , GetActorLocation(), 200, nullptr, IgnoredActros, this, GetInstigatorController(), true);
+// 		if (DebugTrackerBotDrawing)
+// 		{
+// 			DrawDebugSphere(GetWorld(), GetActorLocation(), 200, 12, FColor::Red, false, 2.0f, 0, 1.0f);
+// 		}
 	}
 }
 

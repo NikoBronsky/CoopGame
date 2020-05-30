@@ -14,7 +14,7 @@
 
 
 static int32 DebugWeaponDrawing = 0;
-FAutoConsoleVariableRef CVARDebugWeapinDrawing(
+FAutoConsoleVariableRef CVARDebugWeaponDrawing(
 	TEXT("COOP.DebugWeapons"),
 	DebugWeaponDrawing,
 	TEXT("Draw Debug Lines for Weapons"),
